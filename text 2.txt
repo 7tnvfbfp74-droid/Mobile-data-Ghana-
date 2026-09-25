@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mobile Data Ghana</title>
+
+  <!-- Paystack -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #222;
+    }
+
+    header {
+      background: #0b7a3b;
+      color: white;
+      padding: 25px 15px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .plan {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    .plan h2 {
+      color: #0b7a3b;
+      margin: 5px 0;
+    }
+
+    .price {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .validity {
+      color: #0b7a3b;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background: #0b7a3b;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #075c2d;
+    }
+
+    .payment {
+      background: white;
+      margin-top: 30px;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+
+    input {
+      width: 90%;
+      max-width: 400px;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+
+    #payButton {
+      width: 90%;
+      max-width: 400px;
+      margin-top: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Mobile Data Ghana</h1>
+  <p>Affordable mobile data for all networks</p>
+</header>
+
+<div class="container">
+
+  <h2 style="text-align:center;">Choose Your Data Plan</h2>
+
+  <div class="plans">
+
+    <div class="plan">
+      <h2>2GB</h2>
+      <div class="price">GHS 12</div>
+      <div class="validity">No expired data</div>
+      <button onclick="selectPlan('2GB', 12)">Buy Now</button>
+    </div>
+
+    <div class="plan">
+      <h2>10GB</h2>
+      <div class="price">GHS 25</div>
+      <div class="validity">No expired data</div>
+      <button onclick="selectPlan('10GB', 25)">Buy Now</button>
+    </div>
+
+    <div class="plan">
+      <h2>20GB</h2>
+      <div class="price">GHS 45</div>
+      <div class="validity">No expired data</div>
+      <button onclick="selectPlan('20GB', 45)">Buy Now</button>
+    </div>
+
+    <div class="plan">
+      <h2>50GB</h2>
+      <div class="price">GHS 90</div>
+      <div class="validity">No expired data</div>
+      <button onclick="selectPlan('50GB', 90)">Buy Now</button>
+    </div>
+
+    <div class="plan">
+      <h2>100GB</h2>
+      <div class="price">GHS 170</div>
+      <div class="validity">No expired data</div>
+      <button onclick="selectPlan('100GB', 170)">Buy Now</button>
+    </div>
+
+    <div class="plan">
+      <h2>300GB</h2>
+      <div class="price">GHS 320</div>
+      <div class="validity">No expired data</div>
+      <button onclick="selectPlan('300GB', 320)">Buy Now</button>
+    </div>
+
+    <div class="plan">
+      <h2>600GB</h2>
+      <div class="price">GHS 500</div>
+      <div class="validity">No expired data</div>
+      <button onclick="selectPlan('600GB', 500)">Buy Now</button>
+    </div>
+
+    <div class="plan">
+      <h2>1000GB</h2>
+      <div class="price">GHS 800</div>
+      <div class="validity">No expired data</div>
+      <button onclick="selectPlan('1000GB', 800)">Buy Now</button>
+    </div>
+
+  </div>
+
+  <div class="payment">
+
+    <h2>Complete Your Order</h2>
+
+    <p id="selectedPlan">
+      Select a data plan above.
+    </p>
+
+    <input
+      type="text"
+      id="customerName"
+      placeholder="Full name"
+      autocomplete="name"
+    >
+
+    <br>
+
+    <input
+      type="tel"
+      id="networkNumber"
+      placeholder="Number to receive data"
+      autocomplete="tel"
+    >
+
+    <br>
+
+    <button id="payButton" onclick="pay()">
+      Pay with MoMo or Card
+    </button>
+
+    <p style="font-size:13px;color:#777;">
+      Your data will be delivered automatically after successful payment.
+    </p>
+
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Mobile Data Ghana. All rights reserved.
+</footer>
+
+<script>
+
+  // YOUR PAYSTACK PUBLIC KEY
+  const PAYSTACK_PUBLIC_KEY =
+    "pk_live_4609250fb08a2c52fd98afafc19869727695835f";
+
+  let selectedPlan = "";
+  let selectedPrice = 0;
+
+  // Select a plan
+  function selectPlan(plan, price) {
+
+    selectedPlan = plan;
+    selectedPrice = price;
+
+    document.getElementById("selectedPlan").innerHTML =
+      "Selected: <strong>" +
+      plan +
+      "</strong> — GHS " +
+      price;
+  }
+
+  // Start payment
+  function pay() {
+
+    const name =
+      document.getElementById("customerName").value.trim();
+
+    const number =
+      document.getElementById("networkNumber").value.trim();
+
+    // Make sure a plan was selected
+    if (!selectedPlan) {
+      alert("Please select a data plan first.");
+      return;
+    }
+
+    // Make sure name was entered
+    if (!name) {
+      alert("Please enter your full name.");
+      return;
+    }
+
+    // Make sure receiving number was entered
+    if (!number) {
+      alert("Please enter the number that should receive the data.");
+      return;
+    }
+
+    // Open Paystack payment
+    const handler = PaystackPop.setup({
+
+      key: PAYSTACK_PUBLIC_KEY,
+
+      /*
+       * Paystack Inline requires an email.
+       * The customer does NOT have to enter an email.
+       */
+      email:
+        "customer" +
+        Date.now() +
+        "@mobiledata-gh.com",
+
+      // Paystack uses pesewas for GHS
+      amount: selectedPrice * 100,
+
+      currency: "GHS",
+
+      // Allow MoMo and Card
+      channels: [
+        "mobile_money",
+        "card"
+      ],
+
+      // Customer/order information
+      metadata: {
+        custom_fields: [
+          {
+            display_name: "Customer Name",
+            variable_name: "customer_name",
+            value: name
+          },
+          {
+            display_name: "Data Receiving Number",
+            variable_name: "data_number",
+            value: number
+          },
+          {
+            display_name: "Data Plan",
+            variable_name: "data_plan",
+            value: selectedPlan
+          },
+          {
+            display_name: "Amount",
+            variable_name: "amount",
+            value: "GHS " + selectedPrice
+          },
+          {
+            display_name: "Delivery Method",
+            variable_name: "delivery_method",
+            value: "Automatic delivery"
+          }
+        ]
+      },
+
+      // Payment successful
+      callback: function(response) {
+
+        alert(
+          "Payment successful!\n\n" +
+          "Name: " + name +
+          "\nNumber: " + number +
+          "\nPlan: " + selectedPlan +
+          "\nAmount: GHS " + selectedPrice +
+          "\nReference: " + response.reference +
+          "\n\nYour data will be delivered automatically."
+        );
+
+      },
+
+      // Customer closes payment
+      onClose: function() {
+        console.log("Payment window closed.");
+      }
+
+    });
+
+    handler.openIframe();
+  }
+
+</script>
+
+</body>
+</html>
